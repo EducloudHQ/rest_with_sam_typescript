@@ -19,6 +19,7 @@ confirm_changeset = true
 resolve_s3 = true
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 s3_prefix = "sam-typescript-revised"
 =======
 s3_prefix = "sam-typescripty-revised"
@@ -26,10 +27,14 @@ s3_prefix = "sam-typescripty-revised"
 =======
 s3_prefix = "sam-types-update"
 >>>>>>> update
+=======
+s3_prefix = "sam-type-single"
+>>>>>>> get
 region = "eu-west-1"
 disable_rollback = true
 image_repositories = []
 parameter_overrides = "TableName=\"TypescriptWeatherData\""
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 stack_name = "sam-typescript-revised"
@@ -39,6 +44,9 @@ stack_name = "sam-typescripty-revised"
 =======
 stack_name = "sam-types-update"
 >>>>>>> update
+=======
+stack_name = "sam-type-single"
+>>>>>>> get
 
 [default.package.parameters]
 resolve_s3 = true
