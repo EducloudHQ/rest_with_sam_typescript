@@ -3,6 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: Serverless patterns - Amazon API Gateway to AWS Lambda to Amazon DynamoDB
 
 Parameters:
+
   TableName:
     Type: String
     Description: Dynamodb table name.
@@ -31,12 +32,12 @@ Resources:
     Properties:
       StageName: Prod
 
-  CreateWeather:
+  GetWeatherFunction:
     Type: AWS::Serverless::Function
-    Description: 'Lambda function inserts data into DynamoDB table'
+    Description: 'Lambda function to retrieve all weather items from DynamoDB table'
     Properties:
-      FunctionName: TypescriptCreateWeatherItem
-      Handler: createWeather.lambdaHandler
+      FunctionName: TypescriptGetWeatherItems
+      Handler: getAllWeather.lambdaHandler
       Policies:
         - AmazonDynamoDBFullAccess
         - DynamoDBCrudPolicy:
@@ -45,15 +46,17 @@ Resources:
         ApiEvent:
           Type: Api
           Properties:
-            Path: /create-weather
-            Method: POST
+            Path: /
+            Method: GET
+            RestApiId: !Ref WeatherApi
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
         Minify: true
         Target: "es2020"
         EntryPoints: 
-        - createWeather.ts
+        - getAllWeather.ts
+            
         
   DynamoDBTable:
     Type: AWS::Serverless::SimpleTable
