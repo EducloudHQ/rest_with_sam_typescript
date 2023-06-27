@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { DynamoDBClient, PutItemCommand} from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, UpdateItemCommand} from "@aws-sdk/client-dynamodb";
 
-const tableName = process.env.TABLE_NAME;
+// const tableName = process.env.TABLE_NAME;
 const region = process.env.Region;
 const client = new DynamoDBClient({ region: region });
 
@@ -11,23 +11,31 @@ export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> 
     console.log(event.pathParameters.id)
     const weather_id = event.pathParameters.id
     // console.log(event['body'])
+    const weather = JSON.parse(event['body']).weather
+    const town = JSON.parse(event['body']).town as string
     var params = {
-        "Item":{
-            id:{
-                "S": weather_id
+            Key:{
+                id: {
+                    "S": weather_id as string
+                },
             },
-            weather: {
-                "S":  JSON.parse(event.body).weather
-            },
-            town: {
-                "S":  JSON.parse(event.body).town
-            }
+            UpdateExpression: "set weather = :weather, town = :town",
+            ExpressionAttributeValues: {
+                ':weather': {
+                    "S": weather as string
+                },
+                ':town':{
+                    "S": town as string
+                }
         },
-        TableName: tableName,
-        ReturnConsumedCapacity: "TOTAL",
+        returnValues: "UPDATED_NEW",
+        TableName: process.env.TABLE_NAME
     };
     try {
-        const test = await client.send(new PutItemCommand(params))
+        
+        const test = await client.send(new UpdateItemCommand(
+            params
+        ))
         // console.log("Hello world",test)
         response = {
             statusCode: 200,
@@ -46,3 +54,6 @@ export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> 
     }
     return response;
 };
+
+// lambda function to upate weather item in dynamodb
+
