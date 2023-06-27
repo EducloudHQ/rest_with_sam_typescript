@@ -17,12 +17,12 @@ lint = true
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 resolve_s3 = true
-s3_prefix = "TypescriptSam"
+s3_prefix = "sam-list-types"
 region = "eu-west-1"
 disable_rollback = true
 image_repositories = []
-parameter_overrides = "Client=\"https://weather-api-sam-typescript.com\" ClientDomain=\"https://localhost\" TableName=\"TypescriptWeatherData\""
-stack_name = "TypescriptSam"
+parameter_overrides = "TableName=\"TypescriptWeatherData\""
+stack_name = "sam-list-types"
 
 [default.package.parameters]
 resolve_s3 = true

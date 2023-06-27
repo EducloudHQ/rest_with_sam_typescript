@@ -3,7 +3,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: Serverless patterns - Amazon API Gateway to AWS Lambda to Amazon DynamoDB
 
 Parameters:
-
   TableName:
     Type: String
     Description: Dynamodb table name.
@@ -16,7 +15,7 @@ Globals:
     CodeUri: src/
     Environment:
       Variables:
-        TABLE_NAME: !Ref TableName
+        TABLE_NAME: !Ref WeatherTable
 
   Api:
     EndpointConfiguration: REGIONAL
@@ -30,18 +29,18 @@ Resources:
   WeatherApi:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: Prod
+      StageName: dev
+      Description: serverless api for weather application
 
-  GetWeatherFunction:
+  ListWeatherItems:
     Type: AWS::Serverless::Function
-    Description: 'Lambda function to retrieve all weather items from DynamoDB table'
+    Description: 'Lambda function inserts weather data into DynamoDB table'
     Properties:
       FunctionName: TypescriptGetWeatherItems
       Handler: getAllWeather.lambdaHandler
       Policies:
-        - AmazonDynamoDBFullAccess
-        - DynamoDBCrudPolicy:
-            TableName: !Ref DynamoDBTable
+        DynamoDBCrudPolicy:
+          TableName: !Ref WeatherTable
       Events:
         ApiEvent:
           Type: Api
@@ -56,181 +55,27 @@ Resources:
         Target: "es2020"
         EntryPoints: 
         - getAllWeather.ts
-            
         
-  DynamoDBTable:
-    Type: AWS::Serverless::SimpleTable
+  WeatherTable:
+    Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Ref TableName
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
       ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
 
 Outputs:
-  EndpointUrl:
-    Description: 'HTTP REST endpoint URL'
-    Value: !Sub 'https://${WeatherApi}.execute-api.${AWS::Region}.amazonaws.com/Prod'
-
-
-
-
-# AWSTemplateFormatVersion: '2010-09-09'
-# Transform: AWS::Serverless-2016-10-31
-# Description: >
-#   sam12
-
-#   Sample SAM Template for sam12
-  
-# Globals:
-#   Function:
-#     Timeout: 3
-#     MemorySize: 128
-# Parameters:
-#   SourceBucketName:
-#     Type: String
-#   DestinationBucketName:
-#     Type: String
-
-# Resources:
-#   MyApi:
-#     Type: AWS::Serverless::Api
-#     Properties:
-#       StageName: Prod
-#       Cors: "'*'"
-#       Auth:
-#         DefaultAuthorizer: CognitoAuthorizer
-#         Authorizers:
-#           CognitoAuthorizer:
-#             UserPoolArn: arn:aws:cognito-idp:eu-west-1:132260253285:userpool/eu-west-1_dDfqIG226
-
-#   HelloWorldFunction:
-#     Type: AWS::Serverless::Function 
-#     Properties:
-#       CodeUri: hello-world/
-#       Handler: app.lambdaHandler
-#       Runtime: nodejs14.x
-#       Architectures:
-#         - x86_64
-#       Events:
-#         GetRoot:
-#           Type: Api
-#           Properties:
-#             RestApiId: !Ref MyApi
-#             Path: /post
-#             Method: get
-#       # Events:
-#       #   ApiEvent:
-#       #     Type: Api
-#       #     Properties:
-#       #       Path: /
-#       #       Method: get
-#       #       RestApiId: !Ref MyApi ###########
-#       # Events:
-#       #   HelloWorld:
-#       #     Type: Api 
-#       #     Properties:
-#       #       Path: /post
-#       #       Method: get
-            
-#       Policies:
-#         - AmazonDynamoDBFullAccess
-#         - DynamoDBCrudPolicy:
-#             TableName: !Ref ExampleTable
-
-#   InsertItem:
-#     Type: AWS::Serverless::Function
-#     Properties:
-#       CodeUri: hello-world/
-#       Handler: app.insertItem
-#       Runtime: nodejs14.x
-#       Architectures:
-#         - x86_64
-      
-#       Events:
-#         GetRoot:
-#           Type: Api
-#           Properties:
-#             RestApiId: !Ref MyApi
-#             Path: /post
-#             Method: post
-#       # Events:
-#       #   HelloWorld:
-#       #     Type: Api 
-#       #     Properties:
-#       #       Path: /post
-#       #       Method: post
-#       Policies:
-#         - DynamoDBCrudPolicy:
-#             TableName: !Ref ExampleTable
-
-#   DeleteItem:
-#     Type: AWS::Serverless::Function
-#     Properties:
-#       CodeUri: hello-world/
-#       Handler: app.deleteItem
-#       Runtime: nodejs14.x
-#       Architectures:
-#         - x86_64
-#       Events:
-#         HelloWorld:
-#           Type: Api 
-#           Properties:
-#             Path: /post
-#             Method: delete
-#       Policies:
-#         - DynamoDBCrudPolicy:
-#             TableName: !Ref ExampleTable
-
-#     Metadata: # Manage esbuild properties
-#       BuildMethod: esbuild
-#       BuildProperties:
-#         Minify: true
-#         Target: "es2020"
-#         EntryPoints: 
-#         - app.ts
-
-#   ExampleTable:
-#     Type: "AWS::DynamoDB::Table"
-#     Properties:
-#       TableName: sam12-ExampleTable-4DPPPE0DQOO4
-#       AttributeDefinitions:
-#         - AttributeName: "id"
-#           AttributeType: "S"
-#       KeySchema:
-#         - AttributeName: "id"
-#           KeyType: "HASH"
-#       ProvisionedThroughput:
-#         ReadCapacityUnits: 1
-#         WriteCapacityUnits: 1
-
-#   # MyCognitoUserPool:
-#   #   Type: AWS::Cognito::UserPool
-#   #   Properties:
-#   #     UserPoolName: test1
-#   #     Policies:
-#   #       PasswordPolicy:
-#   #         MinimumLength: 8
-#   #     UsernameAttributes:
-#   #       - email
-#   #     Schema:
-#   #       - AttributeDataType: String
-#   #         Name: email
-#   #         Required: false
-  
-#   # MyCognitoUserPoolClient:
-#   #   Type: AWS::Cognito::UserPoolClient
-#   #   Properties:
-#   #     UserPoolId: eu-west-1_dDfqIG226
-#   #     ClientName: test1
-#   #     GenerateSecret: false
-#   ## Lambda function
-# Outputs:
-#   HelloWorldApi:
-#     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-#     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/post/"
-#   HelloWorldFunction:
-#     Description: "Hello World Lambda Function ARN"
-#     Value: !GetAtt HelloWorldFunction.Arn
-#   HelloWorldFunctionIamRole:
-#     Description: "Implicit IAM Role created for Hello World function"
-#     Value: !GetAtt HelloWorldFunctionRole.Arn
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  WeatherApi:
+    Description: "API Gateway endpoint URL for dev stage for create weather function"
+    Value: !Sub "https://${WeatherApi}.execute-api.${AWS::Region}.amazonaws.com/dev/"
+  CreateWeatherFunction:
+    Description: "Create Weather Lambda Function ARN"
+    Value: !GetAtt ListWeatherItems.Arn
