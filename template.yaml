@@ -32,12 +32,12 @@ Resources:
       StageName: dev
       Description: serverless api for weather application
 
-  UpdateWeather:
+  GetWeather:
     Type: AWS::Serverless::Function
     Description: 'Lambda function inserts weather data into DynamoDB table'
     Properties:
-      FunctionName: TypescriptUpdateWeatherItem
-      Handler: updateWeather.lambdaHandler
+      FunctionName: TypescriptGetWeatherItem
+      Handler: getWeatherItem.lambdaHandler
       Policies:
         DynamoDBCrudPolicy:
           TableName: !Ref WeatherTable
@@ -46,7 +46,7 @@ Resources:
           Type: Api
           Properties:
             Path: /weather/{id}
-            Method: PUT
+            Method: GET
             RestApiId: !Ref WeatherApi
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
@@ -54,7 +54,7 @@ Resources:
         Minify: true
         Target: "es2020"
         EntryPoints: 
-        - updateWeather.ts
+        - getWeatherItem.ts
         
   WeatherTable:
     Type: AWS::DynamoDB::Table
@@ -78,4 +78,4 @@ Outputs:
     Value: !Sub "https://${WeatherApi}.execute-api.${AWS::Region}.amazonaws.com/dev/"
   CreateWeatherFunction:
     Description: "Create Weather Lambda Function ARN"
-    Value: !GetAtt UpdateWeather.Arn
+    Value: !GetAtt GetWeather.Arn

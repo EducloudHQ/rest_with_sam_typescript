@@ -17,12 +17,12 @@ lint = true
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 resolve_s3 = true
-s3_prefix = "sam-types-update"
+s3_prefix = "sam-type-single"
 region = "eu-west-1"
 disable_rollback = true
 image_repositories = []
 parameter_overrides = "TableName=\"TypescriptWeatherData\""
-stack_name = "sam-types-update"
+stack_name = "sam-type-single"
 
 [default.package.parameters]
 resolve_s3 = true
