@@ -15,7 +15,7 @@ Globals:
     CodeUri: src/
     Environment:
       Variables:
-        TABLE_NAME: !Ref TableName
+        TABLE_NAME: !Ref WeatherTable
 
   Api:
     EndpointConfiguration: REGIONAL
@@ -29,24 +29,25 @@ Resources:
   WeatherApi:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: Prod
+      StageName: dev
+      Description: serverless api for weather application
 
   CreateWeather:
     Type: AWS::Serverless::Function
-    Description: 'Lambda function inserts data into DynamoDB table'
+    Description: 'Lambda function inserts weather data into DynamoDB table'
     Properties:
-      FunctionName: TypescriptCreateWeatherItem
+      FunctionName: CreateWeatherLambdaTypescript
       Handler: createWeather.lambdaHandler
       Policies:
-        - AmazonDynamoDBFullAccess
-        - DynamoDBCrudPolicy:
-            TableName: !Ref DynamoDBTable
+        DynamoDBCrudPolicy:
+          TableName: !Ref WeatherTable
       Events:
         ApiEvent:
           Type: Api
           Properties:
             Path: /create-weather
             Method: POST
+            RestApiId: !Ref WeatherApi
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -55,18 +56,29 @@ Resources:
         EntryPoints: 
         - createWeather.ts
         
-  DynamoDBTable:
-    Type: AWS::Serverless::SimpleTable
+  WeatherTable:
+    Type: AWS::DynamoDB::Table
     Properties:
-      TableName: !Ref TableName
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
       ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
 
 Outputs:
-  EndpointUrl:
-    Description: 'HTTP REST endpoint URL'
-    Value: !Sub 'https://${WeatherApi}.execute-api.${AWS::Region}.amazonaws.com/Prod'
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  WeatherApi:
+    Description: "API Gateway endpoint URL for dev stage for create weather function"
+    Value: !Sub "https://${WeatherApi}.execute-api.${AWS::Region}.amazonaws.com/dev/"
+  CreateWeatherFunction:
+    Description: "Create Weather Lambda Function ARN"
+    Value: !GetAtt CreateWeather.Arn
 
 
 
