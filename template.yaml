@@ -31,14 +31,15 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
-
-  UpdateLambdaFunction:
+            
+  DeleteWeatherFunction:
     Type: AWS::Serverless::Function
-    Description: 'Lambda function updates weather item in DynamoDB table'
+    Description: 'Lambda function remove weather item from DynamoDB table'
     Properties:
-      FunctionName: TypescriptUpdateWeatherItem
-      Handler: updateWeather.lambdaHandler
+      FunctionName: TypescriptDeleteWeatherItem
+      Handler: deleteWeather.lambdaHandler
       Policies:
+        
         - AmazonDynamoDBFullAccess
         - DynamoDBCrudPolicy:
             TableName: !Ref DynamoDBTable
@@ -46,17 +47,17 @@ Resources:
         ApiEvent:
           Type: Api
           Properties:
-            RestApiId: !Ref WeatherApi 
-            Path: /update-weather/{id}
-            Method: PUT 
+            RestApiId: !Ref WeatherApi
+            Path: /delete-weather/{id}
+            Method: DELETE 
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
         Minify: true
         Target: "es2020"
-        EntryPoints:
-        - updateWeather.ts
-        
+        EntryPoints: 
+        - deleteWeather.ts 
+
   DynamoDBTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
