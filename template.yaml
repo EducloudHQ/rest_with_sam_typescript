@@ -7,17 +7,22 @@ Description: >
   Sample SAM Template for rest_weather_api
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+
+Parameters:
+  TableName:
+    Type: String
+    Description: Dynamodb table name.
+
 Globals:
   Function:
-    Runtime: nodejs16.x
+    Runtime: nodejs14.x
     Architectures:
       - x86_64
     CodeUri: src/
-    Timeout: 3
-    MemorySize: 128
     Environment:
       Variables:
         TABLE_NAME: !Ref WeatherTable
+
   Api:
     EndpointConfiguration: REGIONAL
     TracingEnabled: True
@@ -25,6 +30,7 @@ Globals:
       AllowMethods: "'OPTIONS,POST,GET,PUT,DELETE'"
       AllowHeaders: "'Content-Type'"
       AllowOrigin:  "'*'"
+
 Resources:
   WeatherApi:
     Type: AWS::Serverless::Api
@@ -32,6 +38,30 @@ Resources:
       StageName: dev
       Description: serverless api for weather application
 
+  ListWeatherItems:
+    Type: AWS::Serverless::Function
+    Description: 'Lambda function inserts weather data into DynamoDB table'
+    Properties:
+      FunctionName: TypescriptGetWeatherItems
+      Handler: getAllWeather.lambdaHandler
+      Policies:
+        DynamoDBCrudPolicy:
+          TableName: !Ref WeatherTable
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
+            RestApiId: !Ref WeatherApi
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        EntryPoints: 
+        - getAllWeather.ts
+        
 
   CreateWeather:
     Type: AWS::Serverless::Function
@@ -143,34 +173,6 @@ Resources:
             Id: WeatherTable
           Permissions:
             - Write
-  GetAllWeather:
-    Type: AWS::Serverless::Function
-    Description: 'Lambda function gets all weather item in DynamoDB table'
-    Properties:
-      FunctionName: GetsAllWeatherLambda
-      Handler: getAllWeather.lambdaHandler
-
-      Events:
-        ApiEvent:
-          Type: Api
-          Properties:
-            Path: /weathers
-            Method: GET
-            RestApiId: !Ref WeatherApi
-    Metadata: # Manage esbuild properties
-      BuildMethod: esbuild
-      BuildProperties:
-        Minify: true
-        Target: "es2020"
-        EntryPoints: 
-        - getAllWeather.ts 
-    Connectors:
-      getsWeatherItemToDB:
-        Properties:
-          Destination:
-            Id: WeatherTable
-          Permissions:
-            - Read
   WeatherTable:
     Type: AWS::DynamoDB::Table
     Properties:
