@@ -32,12 +32,12 @@ Resources:
     Properties:
       StageName: Prod
 
-  GetWeatherFunction:
+  UpdateLambdaFunction:
     Type: AWS::Serverless::Function
-    Description: 'Lambda function to retrieve all weather items from DynamoDB table'
+    Description: 'Lambda function updates weather item in DynamoDB table'
     Properties:
-      FunctionName: TypescriptGetWeatherItems
-      Handler: getAllWeather.lambdaHandler
+      FunctionName: TypescriptUpdateWeatherItem
+      Handler: updateWeather.lambdaHandler
       Policies:
         - AmazonDynamoDBFullAccess
         - DynamoDBCrudPolicy:
@@ -46,17 +46,16 @@ Resources:
         ApiEvent:
           Type: Api
           Properties:
-            Path: /
-            Method: GET
-            RestApiId: !Ref WeatherApi
+            RestApiId: !Ref WeatherApi 
+            Path: /update-weather/{id}
+            Method: PUT 
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
         Minify: true
         Target: "es2020"
-        EntryPoints: 
-        - getAllWeather.ts
-            
+        EntryPoints:
+        - updateWeather.ts
         
   DynamoDBTable:
     Type: AWS::Serverless::SimpleTable
