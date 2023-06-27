@@ -1,22 +1,23 @@
+
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Serverless patterns - Amazon API Gateway to AWS Lambda to Amazon DynamoDB
+Description: >
+  rest_weather_api
 
-Parameters:
-  TableName:
-    Type: String
-    Description: Dynamodb table name.
+  Sample SAM Template for rest_weather_api
 
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Runtime: nodejs14.x
+    Runtime: nodejs16.x
     Architectures:
       - x86_64
     CodeUri: src/
+    Timeout: 3
+    MemorySize: 128
     Environment:
       Variables:
         TABLE_NAME: !Ref WeatherTable
-
   Api:
     EndpointConfiguration: REGIONAL
     TracingEnabled: True
@@ -24,23 +25,20 @@ Globals:
       AllowMethods: "'OPTIONS,POST,GET,PUT,DELETE'"
       AllowHeaders: "'Content-Type'"
       AllowOrigin:  "'*'"
-
 Resources:
   WeatherApi:
     Type: AWS::Serverless::Api
     Properties:
       StageName: dev
+      Description: serverless api for weather application
+
 
   CreateWeather:
     Type: AWS::Serverless::Function
-    Description: 'Lambda function inserts data into DynamoDB table'
+    Description: 'Lambda function inserts weather data into DynamoDB table'
     Properties:
-      FunctionName: TypescriptCreateWeatherItem
+      FunctionName: CreateWeatherLambda
       Handler: createWeather.lambdaHandler
-      Policies:
-        - AmazonDynamoDBFullAccess
-        - DynamoDBCrudPolicy:
-            TableName: !Ref DynamoDBTable
       Events:
         ApiEvent:
           Type: Api
@@ -54,67 +52,49 @@ Resources:
         Minify: true
         Target: "es2020"
         EntryPoints: 
-        - createWeather.ts
-
-  ListWeatherItems:
+        - createWeather.ts 
+    Connectors:
+      addWeatherItemToDB:
+        Properties:
+          Destination:
+            Id: WeatherTable
+          Permissions:
+            - Write
+  UpdateWeather:
     Type: AWS::Serverless::Function
-    Description: 'Lambda function inserts weather data into DynamoDB table'
+    Description: 'Lambda function updates weather item in DynamoDB table'
     Properties:
-      FunctionName: TypescriptGetWeatherItems
-      Handler: getAllWeather.lambdaHandler
-      Policies:
-        DynamoDBCrudPolicy:
-          TableName: !Ref WeatherTable
+      FunctionName: UpdateWeatherLambda
+      Handler: updateWeather.lambdaHandler
+
       Events:
         ApiEvent:
           Type: Api
           Properties:
-            Path: /
-            Method: GET
+            Path: /weather/{id}
+            Method: PUT
             RestApiId: !Ref WeatherApi
+    
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
         Minify: true
         Target: "es2020"
         EntryPoints: 
-        - getAllWeather.ts
-            
-  DeleteWeatherFunction:
-    Type: AWS::Serverless::Function
-    Description: 'Lambda function remove weather item from DynamoDB table'
-    Properties:
-      FunctionName: TypescriptDeleteWeatherItem
-      Handler: deleteWeather.lambdaHandler
-      Policies:
-        
-        - AmazonDynamoDBFullAccess
-        - DynamoDBCrudPolicy:
-            TableName: !Ref DynamoDBTable
-      Events:
-        ApiEvent:
-          Type: Api
-          Properties:
-            RestApiId: !Ref WeatherApi
-            Path: /delete-weather/{id}
-            Method: DELETE 
-    Metadata: # Manage esbuild properties
-      BuildMethod: esbuild
-      BuildProperties:
-        Minify: true
-        Target: "es2020"
-        EntryPoints: 
-        - deleteWeather.ts 
-
+        - updateWeather.ts 
+    Connectors:
+      updateWeatherItemToDB:
+        Properties:
+          Destination:
+            Id: WeatherTable
+          Permissions:
+            - Write
   GetWeather:
     Type: AWS::Serverless::Function
-    Description: 'Lambda function inserts weather data into DynamoDB table'
+    Description: 'Lambda function gets weather item in DynamoDB table'
     Properties:
-      FunctionName: TypescriptGetWeatherItem
+      FunctionName: GetWeatherLambda
       Handler: getWeatherItem.lambdaHandler
-      Policies:
-        DynamoDBCrudPolicy:
-          TableName: !Ref WeatherTable
       Events:
         ApiEvent:
           Type: Api
@@ -128,8 +108,69 @@ Resources:
         Minify: true
         Target: "es2020"
         EntryPoints: 
-        - getWeatherItem.ts
-        
+        - getWeatherItem.ts 
+    Connectors:
+      getWeatherItemToDB:
+        Properties:
+          Destination:
+            Id: WeatherTable
+          Permissions:
+            - Read
+  DeleteWeather:
+    Type: AWS::Serverless::Function
+    Description: 'Lambda function deletes weather item from DynamoDB table'
+    Properties:
+      FunctionName: DeleteWeatherLambda
+      Handler: deleteWeather.lambdaHandler
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /weather/{id}
+            Method: DELETE
+            RestApiId: !Ref WeatherApi
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        EntryPoints: 
+        - deleteWeather.ts 
+    Connectors:
+      deleteWeatherItemToDB:
+        Properties:
+          Destination:
+            Id: WeatherTable
+          Permissions:
+            - Write
+  GetAllWeather:
+    Type: AWS::Serverless::Function
+    Description: 'Lambda function gets all weather item in DynamoDB table'
+    Properties:
+      FunctionName: GetsAllWeatherLambda
+      Handler: getAllWeather.lambdaHandler
+
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /weathers
+            Method: GET
+            RestApiId: !Ref WeatherApi
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        EntryPoints: 
+        - getAllWeather.ts 
+    Connectors:
+      getsWeatherItemToDB:
+        Properties:
+          Destination:
+            Id: WeatherTable
+          Permissions:
+            - Read
   WeatherTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -150,3 +191,6 @@ Outputs:
   WeatherApi:
     Description: "API Gateway endpoint URL for dev stage for create weather function"
     Value: !Sub "https://${WeatherApi}.execute-api.${AWS::Region}.amazonaws.com/dev/"
+  CreateWeatherFunction:
+    Description: "Create Weather Lambda Function ARN"
+    Value: !GetAtt CreateWeather.Arn
