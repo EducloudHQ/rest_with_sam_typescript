@@ -30,7 +30,6 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: dev
-<<<<<<< HEAD
 
   CreateWeather:
     Type: AWS::Serverless::Function
@@ -57,16 +56,15 @@ Resources:
         EntryPoints: 
         - createWeather.ts
 
-  GetWeatherFunction:
+  ListWeatherItems:
     Type: AWS::Serverless::Function
-    Description: 'Lambda function to retrieve all weather items from DynamoDB table'
+    Description: 'Lambda function inserts weather data into DynamoDB table'
     Properties:
       FunctionName: TypescriptGetWeatherItems
       Handler: getAllWeather.lambdaHandler
       Policies:
-        - AmazonDynamoDBFullAccess
-        - DynamoDBCrudPolicy:
-            TableName: !Ref DynamoDBTable
+        DynamoDBCrudPolicy:
+          TableName: !Ref WeatherTable
       Events:
         ApiEvent:
           Type: Api
@@ -107,9 +105,6 @@ Resources:
         Target: "es2020"
         EntryPoints: 
         - deleteWeather.ts 
-=======
-      Description: serverless api for weather application
->>>>>>> update
 
   GetWeather:
     Type: AWS::Serverless::Function
@@ -133,17 +128,7 @@ Resources:
         Minify: true
         Target: "es2020"
         EntryPoints: 
-<<<<<<< HEAD
-        - updateWeather.ts
-<<<<<<< HEAD
-Outputs:
-  EndpointUrl:
-    Description: 'HTTP REST endpoint URL'
-    Value: !Sub 'https://${WeatherApi}.execute-api.${AWS::Region}.amazonaws.com/Prod'
-=======
-=======
         - getWeatherItem.ts
->>>>>>> get
         
   WeatherTable:
     Type: AWS::DynamoDB::Table
@@ -165,11 +150,3 @@ Outputs:
   WeatherApi:
     Description: "API Gateway endpoint URL for dev stage for create weather function"
     Value: !Sub "https://${WeatherApi}.execute-api.${AWS::Region}.amazonaws.com/dev/"
-  CreateWeatherFunction:
-    Description: "Create Weather Lambda Function ARN"
-<<<<<<< HEAD
-    Value: !GetAtt UpdateWeather.Arn
->>>>>>> update
-=======
-    Value: !GetAtt GetWeather.Arn
->>>>>>> get
