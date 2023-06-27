@@ -3,7 +3,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: Serverless patterns - Amazon API Gateway to AWS Lambda to Amazon DynamoDB
 
 Parameters:
-
   TableName:
     Type: String
     Description: Dynamodb table name.
@@ -16,7 +15,7 @@ Globals:
     CodeUri: src/
     Environment:
       Variables:
-        TABLE_NAME: !Ref TableName
+        TABLE_NAME: !Ref WeatherTable
 
   Api:
     EndpointConfiguration: REGIONAL
@@ -31,6 +30,7 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: dev
+<<<<<<< HEAD
 
   CreateWeather:
     Type: AWS::Serverless::Function
@@ -107,32 +107,61 @@ Resources:
         Target: "es2020"
         EntryPoints: 
         - deleteWeather.ts 
+=======
+      Description: serverless api for weather application
+>>>>>>> update
 
-  UpdateLambdaFunction:
+  UpdateWeather:
     Type: AWS::Serverless::Function
-    Description: 'Lambda function updates weather item in DynamoDB table'
+    Description: 'Lambda function inserts weather data into DynamoDB table'
     Properties:
       FunctionName: TypescriptUpdateWeatherItem
       Handler: updateWeather.lambdaHandler
       Policies:
-        - AmazonDynamoDBFullAccess
-        - DynamoDBCrudPolicy:
-            TableName: !Ref DynamoDBTable
+        DynamoDBCrudPolicy:
+          TableName: !Ref WeatherTable
       Events:
         ApiEvent:
           Type: Api
           Properties:
-            RestApiId: !Ref WeatherApi 
-            Path: /update-weather/{id}
-            Method: PUT 
+            Path: /weather/{id}
+            Method: PUT
+            RestApiId: !Ref WeatherApi
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
         Minify: true
         Target: "es2020"
-        EntryPoints:
+        EntryPoints: 
         - updateWeather.ts
+<<<<<<< HEAD
 Outputs:
   EndpointUrl:
     Description: 'HTTP REST endpoint URL'
     Value: !Sub 'https://${WeatherApi}.execute-api.${AWS::Region}.amazonaws.com/Prod'
+=======
+        
+  WeatherTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  WeatherApi:
+    Description: "API Gateway endpoint URL for dev stage for create weather function"
+    Value: !Sub "https://${WeatherApi}.execute-api.${AWS::Region}.amazonaws.com/dev/"
+  CreateWeatherFunction:
+    Description: "Create Weather Lambda Function ARN"
+    Value: !GetAtt UpdateWeather.Arn
+>>>>>>> update
