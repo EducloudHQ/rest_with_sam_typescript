@@ -3,16 +3,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: Serverless patterns - Amazon API Gateway to AWS Lambda to Amazon DynamoDB
 
 Parameters:
-  
-  Client:
-    Description: Client website for authentication redirects and cors (must start with https://)
-    Type: String
-    Default: https://myapp.com
-
-  ClientDomain:
-    Type: String
-    Description: Domain allowed to use this UserPool
-
   TableName:
     Type: String
     Description: Dynamodb table name.
@@ -40,11 +30,6 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Prod
-      Auth:
-        DefaultAuthorizer: CognitoAuthorizer
-        Authorizers:
-          CognitoAuthorizer:
-            UserPoolArn: !GetAtt UserPool.Arn
 
   CreateWeather:
     Type: AWS::Serverless::Function
@@ -62,7 +47,6 @@ Resources:
           Properties:
             Path: /create-weather
             Method: POST
-            RestApiId: !Ref WeatherApi
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -70,126 +54,7 @@ Resources:
         Target: "es2020"
         EntryPoints: 
         - createWeather.ts
-
-  GetWeatherFunction:
-    Type: AWS::Serverless::Function
-    Description: 'Lambda function to retrieve all weather items from DynamoDB table'
-    Properties:
-      FunctionName: TypescriptGetWeatherItems
-      Handler: getAllWeather.lambdaHandler
-      Policies:
-        - AmazonDynamoDBFullAccess
-        - DynamoDBCrudPolicy:
-            TableName: !Ref DynamoDBTable
-      Events:
-        ApiEvent:
-          Type: Api
-          Properties:
-            Path: /
-            Method: GET
-            RestApiId: !Ref WeatherApi
-    Metadata: # Manage esbuild properties
-      BuildMethod: esbuild
-      BuildProperties:
-        Minify: true
-        Target: "es2020"
-        EntryPoints: 
-        - getAllWeather.ts
-            
-  DeleteWeatherFunction:
-    Type: AWS::Serverless::Function
-    Description: 'Lambda function remove weather item from DynamoDB table'
-    Properties:
-      FunctionName: TypescriptDeleteWeatherItem
-      Handler: deleteWeather.lambdaHandler
-      Policies:
         
-        - AmazonDynamoDBFullAccess
-        - DynamoDBCrudPolicy:
-            TableName: !Ref DynamoDBTable
-      Events:
-        ApiEvent:
-          Type: Api
-          Properties:
-            RestApiId: !Ref WeatherApi
-            Path: /delete-weather/{id}
-            Method: DELETE 
-    Metadata: # Manage esbuild properties
-      BuildMethod: esbuild
-      BuildProperties:
-        Minify: true
-        Target: "es2020"
-        EntryPoints: 
-        - deleteWeather.ts 
-
-  UpdateLambdaFunction:
-    Type: AWS::Serverless::Function
-    Description: 'Lambda function updates weather item in DynamoDB table'
-    Properties:
-      FunctionName: TypescriptUpdateWeatherItem
-      Handler: updateWeather.lambdaHandler
-      Policies:
-        - AmazonDynamoDBFullAccess
-        - DynamoDBCrudPolicy:
-            TableName: !Ref DynamoDBTable
-      Events:
-        ApiEvent:
-          Type: Api
-          Properties:
-            RestApiId: !Ref WeatherApi 
-            Path: /update-weather/{id}
-            Method: PUT 
-    Metadata: # Manage esbuild properties
-      BuildMethod: esbuild
-      BuildProperties:
-        Minify: true
-        Target: "es2020"
-        EntryPoints:
-        - updateWeather.ts
-  UserPool:
-    Type: AWS::Cognito::UserPool
-    Properties: 
-      UserPoolName: TypescriptSamWeatherUserPool
-      Policies:
-        PasswordPolicy:
-          MinimumLength: 8
-      AutoVerifiedAttributes:
-        - email
-      UsernameAttributes: 
-        - email
-      Schema:
-        - AttributeDataType: String
-          Name: email
-          Required: false
-  
-  UserPoolClient:
-    Type: AWS::Cognito::UserPoolClient
-    Properties:
-      UserPoolId: !Ref UserPool
-      GenerateSecret: false  
-      ExplicitAuthFlows:
-        - ALLOW_USER_PASSWORD_AUTH
-        - ALLOW_REFRESH_TOKEN_AUTH 
-      SupportedIdentityProviders:
-        - COGNITO
-      CallbackURLs:
-        - !Ref ClientDomain
-      LogoutURLs:
-        - !Ref ClientDomain
-      AllowedOAuthFlowsUserPoolClient: true
-      AllowedOAuthFlows:
-        - implicit
-      AllowedOAuthScopes:
-        - email
-        - openid
-        - profile    
-
-    # Create a hosted domain for users to signup and login
-  UserPoolDomain:
-    Type: AWS::Cognito::UserPoolDomain
-    Properties: 
-      Domain: !Sub typescriptweatherauth${AWS::AccountId}
-      UserPoolId: !Ref UserPool
   DynamoDBTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
