@@ -25,7 +25,23 @@ Content
     |-7.2.update_weather_lambda_function.md  
 |-  8.read
     |-8.1.get_weather_lambda_resource.md  
-    |-8.2.get_weather_lambda_function.md  
+    |-8.2.get_weather_lambda_function.md 
+|-  9.delete
+    |-9.1.delete_weather_lambda_resource.md  
+    |-9.2.delete_weather_lambda_function.md 
+|-  10.list
+    |-10.1.list_weather_lambda_resource.md  
+    |-10.2.list_weather_lambda_function.md 
+|-  11.deploy
+    |-11.1.deploy.md
+|-  12.testing
+    |-12.1.testing_create_weather_endpoint.md 
+    |-12.1.testing_get_weather_endpoint.md 
+    |-12.1.testing_update_weather_endpoint.md 
+    |-12.1.testing_delete_weather_endpoint.md 
+    |-12.1.testing_list_weathers_endpoint.md 
+|-  13.conclusion
+    |-conclusion.md     
 ```
 
 # rest_weather_api
