@@ -1,4 +1,34 @@
-# sam12
+# Build a serverless rest api with AWS SAM, Api Gateway and Typescript
+
+```
+Content
+|- 1.introduction
+    |- 1.1.intended_audience.md
+    |- 1.2.what_is_the_aws_serverless_application_model.md
+    |- 1.3.description_of_the_services.md
+|- 2.prerequisite
+    |-2.1.create_an_aws_account
+    |-2.2.download_postman.md
+|- 3.setup
+    |-3.1.initialize_project.md
+    |-3.2.build_and_deploy.md
+|- 4.sam_anatomy
+    |-4.1.template_anatomy.md 
+|- 5.serverless_api
+    |-4.1.create_weather_database.md
+    |-4.2.create_weather_api_gateway.md
+|- 6.create    
+    |-6.1.create_weather_lambda_resource.md   
+    |-6.2.create_weather_lambda_function.md 
+|- 7.update
+    |-7.1.update_weather_lambda_resource.md  
+    |-7.2.update_weather_lambda_function.md  
+|-  8.read
+    |-8.1.get_weather_lambda_resource.md  
+    |-8.2.get_weather_lambda_function.md  
+```
+
+# rest_weather_api
 
 This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.
 
