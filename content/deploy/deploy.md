@@ -6,7 +6,7 @@ But it's preferable we use the cloud, since it's much suitable for this tutorial
 
 ## Github Repository
 
-You can get the complete code from [here](https://github.com/EducloudHQ/rest_with_sam_python/tree/master)
+You can get the complete code from [here](https://github.com/EducloudHQ/rest_with_sam_typescript/tree/master)
 
 Once you have the complete code, open up your commandline interface and run the following commands.
 

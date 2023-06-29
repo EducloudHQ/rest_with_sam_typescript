@@ -32,7 +32,7 @@ Type in the following code under Resources in the `template.yaml` file.
 `GetAllWeather` is the functions logical id.
 `AWS::Serverless::Function` resource for a serverless function.
 
-`Handler` refers to the location of the lambda_handler code, which we'll create in a minute.
+`Handler` refers to the location of the lambdaHandler code, which we'll create in a minute.
 
 `Events` refer to activities that trigger the lambda function.
 In this case, when a `GET` request is made to the endpoint at `Path` /weathers, this lambda function should be invoked.
@@ -48,4 +48,4 @@ We assign a `Read` permission because we are reading data from the dynamoDB.
           Permissions:
             - Read
 ```
-Let's create the get all weather item lambda_handler now.
+Let's create the get all weather item lambdaHandler now.

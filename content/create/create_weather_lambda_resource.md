@@ -3,7 +3,7 @@ Now that we've created the api gateway, let's jump right in and create our first
 `CreateWeather` lambda endpoint would help us add weather items to the dynamo db table.
 
 In order to create this endpoint, we first have to define it's resources under the `Resources` section of 
-the `template.yaml` file and then define a `lambda_handler` in a src folder.
+the `template.yaml` file and then define a `lambdaHandler` in a src folder.
 
 Type in the following code under resources in the `template.yaml` file.
 
@@ -14,7 +14,7 @@ Type in the following code under resources in the `template.yaml` file.
     Description: 'Lambda function inserts weather data into DynamoDB table'
     Properties:
       FunctionName: CreateWeatherLambda
-      Handler: create_weather.lambda_handler
+      Handler: createWeather.lambdaHandler
       Events:
         ApiEvent:
           Type: Api
@@ -36,7 +36,7 @@ Type in the following code under resources in the `template.yaml` file.
 `CreateWeather` is the functions logical id.
 `AWS::Serverless::Function` resource for a serverless function.
 
-`Handler` refers to the location of the lambda_handler code, which we'll create in a minute.
+`Handler` refers to the location of the lambdaHandler code, which we'll create in a minute.
 
 `Events` refer to activities that trigger the lambda function.
 In this case, when a `POST` request is made to the endpoint at `Path` /create-weather,

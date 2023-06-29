@@ -41,7 +41,7 @@ export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> 
     return response;
 };
 ```
-Next, we get the `DynamoDBClient` and `PutItemCommand` from aws-sdk/client-dynamodb and initialize `DynamoDBClient` , import the `TABLE_NAME` and `REGION` environment variable we defined in the Global Section of the `template.yaml` file.
+Next, we get the `DynamoDBClient` and `DeleteItemCommand` from aws-sdk/client-dynamodb and initialize `DynamoDBClient` , import the `TABLE_NAME` and `REGION` environment variable we defined in the Global Section of the `template.yaml` file.
 
 The weather item id is gotten from pathParameters event object and used as a value in 
 deleting an item from dynamodb.
@@ -59,7 +59,7 @@ const result = await client.send(new DeleteItemCommand(
 )
 ```
 
-We then wrap the method in a `try-except` block and return a status and a message, based on the result.
+We then wrap the method in a `try-catch` block and return a status and a message, based on the result.
 
 
 ## Github Repository

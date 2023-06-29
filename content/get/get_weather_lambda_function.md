@@ -2,7 +2,7 @@ Inside the `src` folder, create a file called `getWeatherItem.ts`.
 
 Open up the `getWeatherItem.ts` file and type in the following code.
 
-```python
+```ts
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { DynamoDBClient, GetItemCommand} from "@aws-sdk/client-dynamodb";
 
@@ -13,11 +13,11 @@ export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> 
     let response: APIGatewayProxyResult;
     console.log(event)
     console.log(event.pathParameters.id)
-    const weather_id = event.pathParameters.id
+    const weatherId = event.pathParameters.id
     var params = {
             Key:{
                 id: {
-                    "S": weather_id as string
+                    "S": weatherId as string
                 },
             },
         TableName: process.env.TABLE_NAME
@@ -44,10 +44,9 @@ export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> 
     return response;
 };
 ```
-In the above code, we import DynamoDBClient and GetItemCommand from @aws-sdk/client-dynamodb then use that to access our dynamodb table.
+In the above code, we import `DynamoDBClient` and `GetItemCommand` from `@aws-sdk/client-dynamodb `then use that to access our dynamodb table.
 
-The weather item id is gotten from pathParameters event object and used as a value in 
-getting an item from dynamodb.
+The weather item id is gotten from pathParameters event object and used as a value in getting an item from dynamodb.
 
 `const res = await client.send(new GetItemCommand(
             params

@@ -17,7 +17,7 @@ We'll be deploying the application to the AWS Cloud in order to test and confirm
    
 4. [ NodeJs](https://nodejs.org/en/download). 
    
-5. [Typescript](https://www.python.org/ftp/python/3.11.4/python-3.11.4-amd64.exe). The programming language used in this project
+5. [Typescript](). The programming language used in this project
    
 6. [Postman](https://www.postman.com/downloads/). Postman is an API platform for building and using APIs. Postman simplifies each step of the API lifecycle and streamlines collaboration so you can create better APIs—faster.
 

@@ -17,13 +17,13 @@ export const lambdaHandler = async (event: any): Promise<APIGatewayProxyResult> 
     let response: APIGatewayProxyResult;
     console.log(event)
     console.log(event.pathParameters.id)
-    const weather_id = event.pathParameters.id
+    const weatherId = event.pathParameters.id
     const weather = JSON.parse(event['body']).weather
     const town = JSON.parse(event['body']).town as string
     var params = {
             Key:{
                 id: {
-                    "S": weather_id as string
+                    "S": weatherId as string
                 },
             },
             UpdateExpression: "set weather = :weather, town = :town",
@@ -85,7 +85,7 @@ We use the `JSON.parse()` method to get the values from the event body and path 
 
 ```ts
 
-const weather_id = event.pathParameters.id
+const weatherId = event.pathParameters.id
 const weather = JSON.parse(event['body']).weather
 const town = JSON.parse(event['body']).town as string
 console.log("event", event)
@@ -109,11 +109,11 @@ We'll set the `UpdateExpression` value to update both the weather and town attri
 
 
 
-```python
+```ts
 var item = {
             Key:{
                 id: {
-                    "S": weather_id as string
+                    "S": weatherId as string
                 },
             },
             UpdateExpression: "set weather = :weather, town = :town",

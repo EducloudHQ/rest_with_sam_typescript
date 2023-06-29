@@ -34,7 +34,7 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
 ```
 After importing all required dependencies, the only significant change here is the dynamodb `ScanCommand` method which scans and reads all items from the database table.
 
-Using the `scan` method on really large tables would greatly affect the performance of your application, unless you are using pagination.
+Using the `ScanCommand` method on really large tables would greatly affect the performance of your application, unless you are using pagination.
 
 For this use case, we only have a couple of items in our table, so no pagination.
 

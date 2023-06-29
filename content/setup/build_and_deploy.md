@@ -22,7 +22,8 @@ The `sam deploy --guided` command will package and deploy your application to AW
 * **Save arguments to samconfig.toml**: If set to yes, your choices will be saved to a configuration file inside the project, so that in the future you can just re-run `sam deploy` without parameters to deploy changes to your application.
 
 
-Stack Name [rest_weather_api]: rest-weather-api    -->` Never use underscores for a stack name`
+```bash
+Stack Name [rest_weather_api]: rest-weather-api --> `Never use underscores for a stack name`
 AWS Region [us-east-2]: Press Enter key
 Confirm changes before deploy [y/N]: y
 Allow SAM CLI IAM role creation [Y/n]: Y
@@ -33,5 +34,6 @@ SAM configuration environment [default]: Press Enter key
 Previewing CloudFormation changeset before deployment:
 
 Deploy this changeset? [y/N]: y
+```
 
 You can find your API Gateway Endpoint URL in the output values displayed after deployment.

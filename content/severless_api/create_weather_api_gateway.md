@@ -33,7 +33,7 @@ Description: >
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Runtime: nodejs14.x
+    Runtime: nodejs18.x
     Architectures:
       - x86_64
     CodeUri: src/
