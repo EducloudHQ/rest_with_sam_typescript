@@ -81,7 +81,7 @@ Next,
 
 Next, we get the `DynamoDBClient` and `PutItemCommand` from aws-sdk/client-dynamodb and initialize `DynamoDBClient` , import the `TABLE_NAME` and `REGION` environment variable we defined in the Global Section of the `template.yaml` file.
 
-```python 
+```ts 
 const tableName = process.env.TABLE_NAME;
 const region = process.env.Region;
 const client = new DynamoDBClient({ region: region });
@@ -92,7 +92,7 @@ to contain `weather` and `town` values.
 
 We use the `JSON.parse()` method to get the above values from the event body like so.
 
-```python
+```ts
 
  weather = JSON.parse(event.body).weather
  town = JSON.parse(event.body).town
@@ -126,8 +126,8 @@ var weathItem = {
 Finally, inside a `try` `catch` block, we put the item into the table,
 using `PutItemCommand` method.
 
-```python
-table.put_item(Item=item)
+```ts
+client.send(new PutItemCommand(weathItem))
 ```
 Then we return messages and appropriate status codes, depending on the success or failure of the 
 process.
