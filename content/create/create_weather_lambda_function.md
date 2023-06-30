@@ -97,10 +97,9 @@ We use the `JSON.parse()` method to get the above values from the event body lik
  town = JSON.parse(event.body).town
 
 ```
-Remember we specified `id` as the primary key for the table. When inserting data 
-into the table, we must have an `id` key value pair.
+Remember we specified `id` as the primary key for the table. When inserting data into the table, we must have an `id` key value pair.
 
-This `id` value must be unique for each item. For this case, generate a random number and assign to the id.
+This `id` value must be unique for each item and its of type `string`. For this case, generate a random number cast it to type `string` and assign to the id.
 
 ```ts
 var weather_id = Math.floor(Math.random() * 1000).toString();
@@ -121,8 +120,9 @@ var weathItem = {
     };
 ```
 
-Finally, inside a `try` `catch` block, we put the item into the table,
-using `PutItemCommand` method.
+Finally, inside a `try` `catch` block, we put the item into the table using `PutItemCommand` method.
+
+`"S"` indicates that the variable is of type `string`,
 
 ```ts
 client.send(new PutItemCommand(weathItem))
