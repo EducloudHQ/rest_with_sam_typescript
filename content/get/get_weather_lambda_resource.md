@@ -5,7 +5,6 @@ Let's write a lambda function resource to get a single item from the dynamodb ta
 Type in the following code under Resources in the `template.yaml` file.
 
 ```yaml
-
    GetWeather:
     Type: AWS::Serverless::Function
     Description: 'Lambda function gets weather item in DynamoDB table'
