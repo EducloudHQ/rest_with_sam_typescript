@@ -6,7 +6,7 @@ The application uses several AWS resources, including Lambda functions, Dynamo D
 
 For resource provisioning, we'll be using AWS SAM.
 
-![alt text](/assets/solutions_architecture_python.png)
+![alt text](https://raw.githubusercontent.com/EducloudHQ/rest_with_sam_typescript/master/assets/solutions_architecture_python.png)
 
 ## Prerequisite
 Before proceeding, please make sure you have these installed and configured properly.

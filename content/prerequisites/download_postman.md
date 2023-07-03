@@ -4,4 +4,4 @@ Postman is an application used for API testing. It is an HTTP client that tests 
 
 You can download Postman as a desktop app (available for Linux, Windows 10, or MacOsX) or web application from [here](https://www.postman.com/downloads/) . 
 
-![alt text](/assets/postman.png)
+![alt text](https://raw.githubusercontent.com/EducloudHQ/rest_with_sam_typescript/master/assets/postman.png)

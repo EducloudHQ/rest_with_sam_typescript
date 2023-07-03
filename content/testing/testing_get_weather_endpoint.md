@@ -11,4 +11,4 @@ Request is `GET`
 
 There isn't any request body
 
-![alt text](../../assets/get_weather_item.png)
+![alt text](https://raw.githubusercontent.com/EducloudHQ/rest_with_sam_typescript/master/assets/get_weather_item.png)

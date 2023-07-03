@@ -9,4 +9,4 @@ Still in postman, change the path to /weather/753
 Request is `DELETE`
 
 
-![alt text](../../assets/delete_weather.png)
+![alt text](https://raw.githubusercontent.com/EducloudHQ/rest_with_sam_typescript/master/assets/delete_weather.png)
