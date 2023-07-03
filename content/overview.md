@@ -2,9 +2,11 @@
 # Build a serverless rest api with AWS SAM, Api Gateway and Typescript
 This course would walk you through building CRUDL(Create, Read, Update, Delete, List) api for a weather application.
 
-The application uses several AWS resources, including Lambda functions and an API Gateway API. 
+The application uses several AWS resources, including Lambda functions, Dynamo Database and an API Gateway API. 
 
 For resource provisioning, we'll be using AWS SAM.
+
+![alt text](/assets/solutions_architecture_python.png)
 
 ## Prerequisite
 Before proceeding, please make sure you have these installed and configured properly.
