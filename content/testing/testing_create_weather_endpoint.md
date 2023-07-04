@@ -17,10 +17,10 @@ Request body is
 ```
 Be sure to choose `raw` and `json` as body formatters.
 
-![alt text](../../assets/create_weather.png)
+![alt text](https://raw.githubusercontent.com/EducloudHQ/rest_with_sam_typescript/master/assets/create_weather.png)
 
 If you open up your dynamodb table in the aws console, you should see the created item there.
 
-![alt text](../../assets/ddb_item.png)
+![alt text](https://raw.githubusercontent.com/EducloudHQ/rest_with_sam_typescript/master/assets/ddb_item.png)
 
 Go ahead and create more items in the dynamodb table.
