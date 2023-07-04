@@ -17,4 +17,4 @@ Request body is
 Be sure to choose `raw` and `json` as body formatters.
 
 
-![alt text](https://raw.githubusercontent.com/EducloudHQ/rest_with_sam_typescript/master/assets/update_weather.png)
+![alt text](https://raw.githubusercontent.com/EducloudHQ/rest_with_sam_python/master/assets/update_weather.png)
