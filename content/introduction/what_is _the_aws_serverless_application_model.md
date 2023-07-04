@@ -15,4 +15,4 @@ A SAM template file is a YAML configuration that represents the architecture of 
 There is no additional charge to use AWS SAM. You pay for the AWS resources created using SAM in the same manner as if you created them manually on an AWS Console. You only pay for the AWS resources that you use. There are no minimum fees and no required upfront commitments.
 
 ## How do I install the AWS SAM CLI?
-You can install AWS SAM CLI on Linux, Mac, or Windows using pip. To get started, visit the [installation documentation](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) .
+You can install AWS SAM CLI on Linux, Mac, or Windows using pip. To get started, visit the [installation documentation](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html).
